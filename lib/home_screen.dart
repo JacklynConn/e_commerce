@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:e_commerce/helper/global.dart';
 import 'package:e_commerce/repairer/repairer-list.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
@@ -21,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List serviceTypes = [];
 
   getData() async {
-    var url =
-        Uri.parse('http://172.31.144.1/home_service_backend/public/api/service');
+    var url = Uri.parse('$apiUrl/service');
 
     var resp = await http.get(url);
 
@@ -34,10 +35,41 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    Position position = await Geolocator.getCurrentPosition();
+    print(position.latitude);
+    print(position.longitude);
+    setState(() {
+      isGet = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isGet) {
       getData();
+      _determinePosition();
     }
     return Scaffold(
       appBar: AppBar(

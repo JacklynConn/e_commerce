@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:e_commerce/helper/global.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,8 +20,7 @@ class _RepairerListState extends State<RepairerList> {
   List repairerList = [];
 
   getRepairer() async {
-    var url = Uri.parse(
-        "http://192.168.1.7/home_service_backend/public/api/repairer");
+    var url = Uri.parse("$apiUrl/repairer");
     var resp = await http.post(url, body: {"service_id": widget.serviceId});
     if (resp.statusCode == 200) {
       setState(() {
@@ -38,34 +37,46 @@ class _RepairerListState extends State<RepairerList> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(""),
+        title: const Text(
+          "Repairer",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.amber,
+        centerTitle: true,
       ),
       body: ListView(
         children: [
           for (int i = 0; i < repairerList.length; i++)
-            Card(
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(17.0),
-                    child: Image.network(
-                      "https://cdn-icons-png.flaticon.com/512/7360/7360966.png?ga=GA1.1.1267191725.1679321065",
-                      width: 60,
-                      height: 60,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        repairerList[i]['name'],
-                        style: const TextStyle(fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Card(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(17.0),
+                      child: Image.network(
+                        imageUrl + repairerList[i]['image'],
+                        width: 60,
+                        height: 60,
                       ),
-                      Text(repairerList[i]['phone']),
-                      Text(repairerList[i]['sex']),
-                    ],
-                  ),
-                ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          repairerList[i]['name'],
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        Text(repairerList[i]['phone']),
+                        Text(repairerList[i]['sex']),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
         ],
