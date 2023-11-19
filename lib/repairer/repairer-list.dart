@@ -6,10 +6,18 @@ import 'package:http/http.dart' as http;
 class RepairerList extends StatefulWidget {
   final String serviceId;
   final String serviceName;
+  // 4. Add these two variables
+  final double latitude;
+  final double longitude;
 
-  const RepairerList(
-      {Key? key, required this.serviceId, required this.serviceName})
-      : super(key: key);
+  const RepairerList({
+    Key? key,
+    required this.serviceId,
+    required this.serviceName,
+    // 5. Add these two variables
+    required this.latitude,
+    required this.longitude,
+  }) : super(key: key);
 
   @override
   State<RepairerList> createState() => _RepairerListState();
@@ -21,7 +29,12 @@ class _RepairerListState extends State<RepairerList> {
 
   getRepairer() async {
     var url = Uri.parse("$apiUrl/repairer");
-    var resp = await http.post(url, body: {"service_id": widget.serviceId});
+    var resp = await http.post(url, body: {
+      "service_id": widget.serviceId,
+      //6. Add these two variables
+      "latitude": widget.latitude.toString(),
+      "longitude": widget.longitude.toString(),
+    });
     if (resp.statusCode == 200) {
       setState(() {
         isGetRepairer = false;
@@ -73,6 +86,8 @@ class _RepairerListState extends State<RepairerList> {
                         ),
                         Text(repairerList[i]['phone']),
                         Text(repairerList[i]['sex']),
+                        Text(repairerList[i]['distance']),
+
                       ],
                     ),
                   ],

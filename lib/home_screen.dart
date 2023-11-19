@@ -22,6 +22,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isGet = true;
   List serviceTypes = [];
 
+
+  //1. Add these two variables
+  double latitude = 0.0;
+  double longitude = 0.0;
+
   getData() async {
     var url = Uri.parse('$apiUrl/service');
 
@@ -60,7 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Position position = await Geolocator.getCurrentPosition();
     print(position.latitude);
     print(position.longitude);
+
     setState(() {
+      //2. Add these two lines
+      latitude = position.latitude;
+      longitude = position.longitude;
       isGet = false;
     });
   }
@@ -95,6 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context) => RepairerList(
                         serviceId: serviceTypes[i]['id'].toString(),
                         serviceName: serviceTypes[i]['name'],
+                        //3. Add these two lines
+                        latitude: latitude,
+                        longitude: longitude,
                       ),
                     ),
                   );

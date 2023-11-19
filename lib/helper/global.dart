@@ -1,4 +1,4 @@
-String mainUrl = "http://172.18.112.1/home_service_backend/public";
+String mainUrl = "http://192.168.59.247:8000";
 
 String apiUrl = "$mainUrl/api";
-String imageUrl = "$mainUrl/images/repairer/";
+String imageUrl = "$mainUrl/repairer/";
